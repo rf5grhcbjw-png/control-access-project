@@ -1,0 +1,59 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<div class="row justify-content-center">
+    <div class="col-md-5">
+        <div class="card shadow">
+            <div class="card-header bg-dark text-white">
+                <h5 class="mb-0"><i class="bi bi-door-open-fill"></i> Access Gate</h5>
+            </div>
+            <div class="card-body p-4">
+
+                {% if result is not none %}
+                    {% if result %}
+                    <div class="alert alert-success text-center fs-5 py-3">
+                        <i class="bi bi-check-circle-fill fs-3 d-block mb-1"></i>
+                        <strong>ACCESS GRANTED</strong><br>
+                        <small class="text-muted">{{ username }}</small>
+                    </div>
+                    {% else %}
+                    <div class="alert alert-danger text-center fs-5 py-3">
+                        <i class="bi bi-x-circle-fill fs-3 d-block mb-1"></i>
+                        <strong>ACCESS DENIED</strong><br>
+                        <small class="text-muted">{{ username }}</small>
+                    </div>
+                    {% endif %}
+                {% endif %}
+
+                <form method="POST" action="/checkin">
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold">Username</label>
+                        <input type="text" name="username" class="form-control" placeholder="Enter username" required autofocus>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold">Password</label>
+                        <input type="password" name="password" class="form-control" placeholder="Enter password">
+                    </div>
+                    <div class="mb-4">
+                        <label class="form-label fw-semibold">Method</label>
+                        <div class="d-flex gap-4">
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="method" value="password" id="m1" checked>
+                                <label class="form-check-label" for="m1"><i class="bi bi-key-fill"></i> Password</label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="method" value="biometric" id="m2">
+                                <label class="form-check-label" for="m2"><i class="bi bi-fingerprint"></i> Biometric</label>
+                            </div>
+                        </div>
+                    </div>
+                    <button type="submit" class="btn btn-dark w-100 py-2 fw-semibold">
+                        <i class="bi bi-box-arrow-in-right"></i> Check In
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

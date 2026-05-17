@@ -1,0 +1,95 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<div class="row g-4">
+
+    <div class="col-md-4">
+        <div class="card shadow">
+            <div class="card-header bg-dark text-white">
+                <h5 class="mb-0"><i class="bi bi-person-badge-fill"></i> Add Visitor</h5>
+            </div>
+            <div class="card-body p-4">
+                <form method="POST" action="/visitors/add">
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold">Username</label>
+                        <input type="text" name="username" class="form-control" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold">Block</label>
+                        <select name="block" class="form-select">
+                            {% for b in blocks %}
+                            <option value="{{ b }}">Block {{ b }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold">Host Resident</label>
+                        <input type="text" name="host" class="form-control" required>
+                    </div>
+                    <div class="mb-4">
+                        <label class="form-label fw-semibold">Reason for Visit</label>
+                        <input type="text" name="reason" class="form-control" placeholder="Optional">
+                    </div>
+                    <button type="submit" class="btn btn-dark w-100 fw-semibold">
+                        <i class="bi bi-person-plus"></i> Register Visitor
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-8">
+        <div class="card shadow">
+            <div class="card-header bg-dark text-white">
+                <h5 class="mb-0"><i class="bi bi-person-lines-fill"></i> Visitors</h5>
+            </div>
+            <div class="card-body p-0">
+                <table class="table table-hover align-middle mb-0">
+                    <thead>
+                        <tr>
+                            <th>Username</th>
+                            <th>Block</th>
+                            <th>Host</th>
+                            <th>Reason</th>
+                            <th>Status</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for v in visitors %}
+                        <tr>
+                            <td class="fw-semibold">{{ v['username'] }}</td>
+                            <td><span class="badge bg-secondary">{{ v['block'] }}</span></td>
+                            <td>{{ v['host'] }}</td>
+                            <td class="text-muted small">{{ v['reason'] or '—' }}</td>
+                            <td>
+                                {% if v['temporary_access'] == 'active' %}
+                                <span class="badge bg-success">active</span>
+                                {% else %}
+                                <span class="badge bg-danger">inactive</span>
+                                {% endif %}
+                            </td>
+                            <td>
+                                {% if v['temporary_access'] == 'active' %}
+                                <form method="POST" action="/visitors/deactivate">
+                                    <input type="hidden" name="username" value="{{ v['username'] }}">
+                                    <button type="submit" class="btn btn-sm btn-outline-warning">
+                                        <i class="bi bi-slash-circle"></i> Deactivate
+                                    </button>
+                                </form>
+                                {% endif %}
+                            </td>
+                        </tr>
+                        {% else %}
+                        <tr>
+                            <td colspan="6" class="text-center text-muted py-4">No visitors registered yet.</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+</div>
+{% endblock %}

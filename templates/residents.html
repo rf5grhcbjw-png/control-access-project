@@ -1,0 +1,82 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<div class="row g-4">
+
+    <div class="col-md-4">
+        <div class="card shadow">
+            <div class="card-header bg-dark text-white">
+                <h5 class="mb-0"><i class="bi bi-person-plus-fill"></i> Add Resident</h5>
+            </div>
+            <div class="card-body p-4">
+                <form method="POST" action="/residents/add">
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold">Username</label>
+                        <input type="text" name="username" class="form-control" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold">Password</label>
+                        <input type="password" name="password" class="form-control" required>
+                    </div>
+                    <div class="mb-4">
+                        <label class="form-label fw-semibold">Block</label>
+                        <select name="block" class="form-select">
+                            {% for b in blocks %}
+                            <option value="{{ b }}">Block {{ b }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <button type="submit" class="btn btn-dark w-100 fw-semibold">
+                        <i class="bi bi-person-check-fill"></i> Register
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-8">
+        <div class="card shadow">
+            <div class="card-header bg-dark text-white">
+                <h5 class="mb-0"><i class="bi bi-people-fill"></i> Residents by Block</h5>
+            </div>
+            <div class="card-body p-0">
+                <table class="table table-hover align-middle mb-0">
+                    <thead>
+                        <tr>
+                            <th>Block</th>
+                            <th>Username</th>
+                            <th>Reg Code</th>
+                            <th>Registered</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for r in residents %}
+                        <tr>
+                            <td><span class="badge bg-secondary fs-6">{{ r['block'] }}</span></td>
+                            <td class="fw-semibold">{{ r['username'] }}</td>
+                            <td><code>{{ r['reg_code'] }}</code></td>
+                            <td class="text-muted small">{{ r['created_at'] }}</td>
+                            <td>
+                                <form method="POST" action="/residents/remove">
+                                    <input type="hidden" name="username" value="{{ r['username'] }}">
+                                    <button type="submit" class="btn btn-sm btn-outline-danger"
+                                        onclick="return confirm('Remove {{ r['username'] }}?')">
+                                        <i class="bi bi-trash"></i>
+                                    </button>
+                                </form>
+                            </td>
+                        </tr>
+                        {% else %}
+                        <tr>
+                            <td colspan="5" class="text-center text-muted py-4">No residents registered yet.</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+</div>
+{% endblock %}
